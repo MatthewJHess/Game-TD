@@ -137,10 +137,16 @@ void Data::rTurretData(sf::Packet& packet, TextureManager& textureManager, std::
 void Data::rSlimeData(sf::Packet& packet, TextureManager& textureManager, std::vector<Slime>& slimes) {
     slimes.clear();
     while (!packet.endOfPacket()) {
-        int type;
+        std::string type;
         float posX, posY;
+        SlimeTypes stype = BLUE;
         if (packet >> type >> posX >> posY) {
-            Slime slime(type, posX, posY);
+            
+            if(type=="Blue") stype = BLUE;
+            else if (type == "Blue") stype = SlimeTypes::RED;
+            else if (type == "Blue") stype = SlimeTypes::GREEN;
+            else stype= BLUE;
+            Slime slime(stype, posX, posY);
             slimes.push_back(slime);
         }
         else {

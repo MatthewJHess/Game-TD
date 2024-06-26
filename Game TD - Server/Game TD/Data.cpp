@@ -32,7 +32,7 @@ void Data::processLargePacket(sf::Packet& largePacket, std::vector<OtherPlayer>&
             temp << t << posX << posY << direction.x << direction.y;
             spellPacket.append(temp.getData(), temp.getDataSize());
             temp.clear();
-            std::cout << "Spell packet received." << std::endl;
+            //std::cout << "Spell packet received." << std::endl;
         }
         else if (type == "Turret") {
             sf::Packet temp;
@@ -164,7 +164,7 @@ void Data::createLargePacket(sf::Packet& largePacket, std::vector<OtherPlayer>& 
         float posX = turret.getX();
         float posY = turret.getY();
         float direction = turret.getDirection();
-
+        std::cout << "Turret type: "<<turretType << std::endl;
         turretPacket << type << turretType << posX << posY << direction;
         largePacket.append(turretPacket.getData(), turretPacket.getDataSize());
     }

@@ -14,7 +14,7 @@ void Turret::initSprite()
 }
 
 Turret::Turret(std::string type, float x, float y, TextureManager& textureManager)
-    : position(x, y), health(100.f), shootCooldownMax(2.f), shootCooldown(0.f)
+    : position(x, y), health(100.f), shootCooldownMax(2.f), shootCooldown(0.f), type(type)
 {
     this->texture = textureManager.getTexture("archer");
     this->initSprite();

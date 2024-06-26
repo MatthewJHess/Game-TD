@@ -130,7 +130,7 @@ void Game::initWaveConfigs()
 void Game::updateSpells()
 {
     //auto& spells = this->player.getSpells(); // Store reference to spells vector
-    std::cout << this->spells.size();
+    //std::cout << this->spells.size();
     for (auto& spell : this->spells)
     {
         // Update the spell's position and other properties
@@ -479,7 +479,7 @@ void Game::render()
     //std::cout << "RENDERING..." << std::endl;
     for (auto& spell : this->spells)
     {
-        std::cout << this->spells.size() << " Size"<< std::endl;
+        //std::cout << this->spells.size() << " Size"<< std::endl;
         spell.render(*this->window);
     }
 

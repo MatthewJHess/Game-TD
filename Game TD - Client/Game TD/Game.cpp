@@ -187,7 +187,7 @@ void Game::handleTurretPlacement() {
             // Create a new turret at the placement position
             this->turrets.emplace_back("", texture, mousePos.x, mousePos.y, 0.f);
             sf::Packet packet;
-            packet << "Turret" << "" << "Archer" << mousePos.x << mousePos.y << 0.f;
+            packet << "Turret" << "archer" << mousePos.x << mousePos.y << 0.f;
             largePacket.append(packet.getData(), packet.getDataSize());
             placingTurret = false; // Reset the flag
         }
@@ -298,6 +298,11 @@ void Game::render()
     for (auto& turret : this->turrets)
     {
         turret.render(*this->window);
+    }
+
+    for (auto& player : this->players)
+    {
+        player.render(*this->window);
     }
 
     this->player.render(*this->window);
