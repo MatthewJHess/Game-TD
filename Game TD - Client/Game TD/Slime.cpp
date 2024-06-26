@@ -37,6 +37,7 @@ void Slime::initShape(float x, float y)
     this->shape.setFillColor(color);
     this->shape.setOutlineColor(Color::White);
     this->shape.setOutlineThickness(1.f);
+    this->shape.setPosition(x, y);
 }
 
 // Render the slime
