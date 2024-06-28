@@ -265,7 +265,7 @@ void Game::handleTurretPlacement() {
             sf::Vector2f mousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
 
             // Create a new turret at the placement position
-            this->turrets.emplace_back("archer", mousePos.x, mousePos.y, textureManager);
+            this->turrets.emplace_back(this->spells, "archer", mousePos.x, mousePos.y, textureManager);
             placingTurret = false; // Reset the flag
         }
     }
@@ -364,38 +364,6 @@ void Game::updateSpellCollisions()
     }
 
     // Check collisions for turret spells
-    for (auto& turret : this->turrets)
-    {
-        auto& turretSpells = turret.getSpells();
-        for (auto& spell : turretSpells)
-        {
-            if (spell.getIsActive())
-            {
-                for (auto& slime : this->slimes)
-                {
-                    if (spell.getBounds().intersects(slime.getShape().getGlobalBounds()))
-                    {
-                        points += slime.takeDamage(spell.getDamage()); // Apply damage to the slime
-                        coins += spell.getDamage();
-                        spell.setIsActive(false); // Deactivate the spell
-                        break; // Move to the next spell
-                    }
-                }
-
-                // Check if the turret spell is out of the window bounds
-                if (spell.getPosition().x < 0 || spell.getPosition().x > this->windowSize.x ||
-                    spell.getPosition().y < 0 || spell.getPosition().y > this->windowSize.y)
-                {
-                    spell.setIsActive(false); // Deactivate the spell
-                }
-            }
-        }
-
-        // Remove inactive spells from turret
-        turretSpells.erase(std::remove_if(turretSpells.begin(), turretSpells.end(), [](const Spell& spell) {
-            return !spell.getIsActive();
-            }), turretSpells.end());
-    }
 
     // Remove inactive slimes
     this->slimes.erase(std::remove_if(this->slimes.begin(), this->slimes.end(), [this](Slime& slime) {
@@ -432,10 +400,6 @@ void Game::update()
         for (auto& turret : this->turrets)
         {
             turret.update(dt, slimes, this->textureManager);
-            for (auto& spell : turret.getSpells())
-            {
-                spell.update(this->windowSize);
-            }
         }
 
         this->updatePlayer();
@@ -455,7 +419,7 @@ void Game::update()
             this->allSlimesSpawned = false;
             this->startNewWave();
         }
-        Data::createLargePacket(largePacket, players, spells, turrets, slimes, this->player);
+        Data::createLargePacket(largePacket, players, this->spells, turrets, slimes, this->player);
     }
 }
 

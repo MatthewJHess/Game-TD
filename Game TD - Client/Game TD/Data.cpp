@@ -22,10 +22,9 @@ void Data::processLargePacket(sf::Packet& largePacket, std::vector<OtherPlayer>&
         else if (type == "Spell") {
             sf::Packet temp;
             std::string t;
-            float posX, posY;
-            sf::Vector2f direction;
-            largePacket >> t >> posX >> posY >> direction.x >> direction.y;
-            temp << t << posX << posY << direction.x << direction.y;
+            float posX, posY, direction;
+            largePacket >> t >> posX >> posY >> direction;
+            temp << t << posX << posY << direction;
             spellPacket.append(temp.getData(), temp.getDataSize());
             temp.clear();
         }
@@ -53,13 +52,13 @@ void Data::processLargePacket(sf::Packet& largePacket, std::vector<OtherPlayer>&
         }
     }
 
-    rPlayerData(playerPacket, players);
+    rPlayerData(playerPacket, textureManager, players);
     rSpellData(spellPacket, textureManager, spells);
     rTurretData(turretPacket, textureManager, turrets);
     rSlimeData(slimePacket, textureManager, slimes);
 }
 
-void Data::rPlayerData(sf::Packet& packet, std::vector<OtherPlayer>& players) {
+void Data::rPlayerData(sf::Packet& packet, TextureManager& textureManager, std::vector<OtherPlayer>& players) {
     while (!packet.endOfPacket()) {
         std::string type;
         float posX, posY, health, direction;
@@ -74,7 +73,7 @@ void Data::rPlayerData(sf::Packet& packet, std::vector<OtherPlayer>& players) {
                 }
             }
             if (!found) {
-                OtherPlayer player(type, posX, posY, direction);  // Assuming a suitable constructor
+                OtherPlayer player(type, posX, posY, direction, textureManager);  // Assuming a suitable constructor
                 players.push_back(player);
             }
         }
@@ -91,8 +90,7 @@ void Data::rSpellData(sf::Packet& packet, TextureManager& textureManager, std::v
         std::string type;
         float posX, posY, direction;
         if (packet >> type >> posX >> posY >> direction) {
-            sf::Texture texture = textureManager.getTexture(type);
-            Spell spell(type, texture, posX, posY, direction);
+            Spell spell(type, textureManager, posX, posY, direction);
             spells.push_back(spell);
         }
         else {
@@ -122,8 +120,7 @@ void Data::rTurretData(sf::Packet& packet, TextureManager& textureManager, std::
                 }
             }
             if (!found) {
-                sf::Texture texture = textureManager.getTexture(type);
-                Turret turret(type, texture, posX, posY, direction);
+                Turret turret(type, textureManager, posX, posY, direction);
                 turrets.push_back(turret);
             }
         }

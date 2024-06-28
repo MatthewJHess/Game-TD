@@ -41,7 +41,7 @@ void Player::shootSpell(const sf::Vector2f& targetPosition)
 
     // Create a new spell object and add it to the container
     //spells.push_back(Spell(SpellType::Fire, textureManager.getTexture("fire"))); // Use TextureManager to get the texture
-    spells.emplace_back(SpellType::Fire, textureManager.getTexture("fire"));
+    spells.emplace_back(SpellType::Fire, textureManager);
 
     // Set the position of the spell to the player's position
     spells.back().setPosition(this->sprite.getPosition());
@@ -216,8 +216,4 @@ void Player::render(sf::RenderTarget& target)
 {
     target.draw(this->sprite);
     // Render spells
-    for (auto& spell : spells)
-    {
-        spell.render(target);
-    }
 }

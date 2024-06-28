@@ -18,12 +18,12 @@ bool TextureManager::loadTexture(const std::string& name, const std::string& fil
 sf::Texture& TextureManager::getTexture(const std::string& textureName) {
     auto it = textures.find(textureName);
     if (it != textures.end()) {
-        std::cout << "LOADED TEXTURE: " << textureName << std::endl;
-        return it->second;
+        //std::cout << "LOADED TEXTURE: " << textureName << std::endl;
+        return  this->textures.at(textureName);
     }
     else {
         std::cerr << "Texture not found: " << textureName << std::endl;
-        std::cout << "Number of txts: " << textures.size() << std::endl;
+        //std::cout << "Number of txts: " << textures.size() << std::endl;
         throw std::out_of_range("Texture not found: " + textureName);
     }
 }

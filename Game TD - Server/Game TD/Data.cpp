@@ -53,7 +53,7 @@ void Data::processLargePacket(sf::Packet& largePacket, std::vector<OtherPlayer>&
 
     rPlayerData(playerPacket, players);
     rSpellData(spellPacket, textureManager, spells);
-    rTurretData(turretPacket, textureManager, turrets);
+    rTurretData(turretPacket, textureManager, turrets, spells);
 }
 
 void Data::rPlayerData(sf::Packet& packet, std::vector<OtherPlayer>& players) {
@@ -89,31 +89,36 @@ void Data::rSpellData(sf::Packet& packet, TextureManager& textureManager, std::v
         std::string type;
         float posX, posY;
         sf::Vector2f direction;
+        std::cout << "SPELL REC" << std::endl;
         if (packet >> type >> posX >> posY >> direction.x >> direction.y) {
             sf::Texture texture = textureManager.getTexture(type);
             SpellType stype = SpellType::Fire; //default
-            if (type == "Fire") stype = SpellType::Fire;
-            Spell spell(stype, texture);
+            if (type == "Fire" || type=="fire") stype = SpellType::Fire, std::cout << "FIRE REC" << std::endl;
+            else if(type == "Arrow" || type == "arrow") stype = SpellType::Arrow, std::cout << "ARROW REC" << std::endl;
+            Spell spell(stype, textureManager);
             sf::Vector2f v = { posX, posY };
             spell.setPosition(v);
             spell.setVelocity(direction * spell.getMovementSpeed());
             sf::Vector2f vel = direction * spell.getMovementSpeed();
             std::cout << vel.x << ", " << vel.y << std::endl;
+            std::cout << "Spell Size: "<< spells.size() << std::endl;
             spells.push_back(spell);
+            std::cout << "Spell Size: " << spells.size() << std::endl;
         }
         else {
             // Handle error (e.g., corrupted packet data)
+            std::cout << "Packet Error: " << std::endl;
             break;
         }
     }
 }
 
-void Data::rTurretData(sf::Packet& packet, TextureManager& textureManager, std::vector<Turret>& turrets) {
+void Data::rTurretData(sf::Packet& packet, TextureManager& textureManager, std::vector<Turret>& turrets, std::vector<Spell>& spells) {
     while (!packet.endOfPacket()) {
         std::string type;
         float posX, posY, direction;
         if (packet >> type >> posX >> posY >> direction) {
-            Turret turret(type, posX, posY, textureManager);
+            Turret turret(spells, type, posX, posY, textureManager);
             turrets.push_back(turret);
         }
         else {
@@ -164,7 +169,7 @@ void Data::createLargePacket(sf::Packet& largePacket, std::vector<OtherPlayer>& 
         float posX = turret.getX();
         float posY = turret.getY();
         float direction = turret.getDirection();
-        std::cout << "Turret type: "<<turretType << std::endl;
+        //std::cout << "Turret type: "<<turretType << std::endl;
         turretPacket << type << turretType << posX << posY << direction;
         largePacket.append(turretPacket.getData(), turretPacket.getDataSize());
     }
@@ -179,5 +184,5 @@ void Data::createLargePacket(sf::Packet& largePacket, std::vector<OtherPlayer>& 
         slimePacket << type << slimeType << posX << posY;
         largePacket.append(slimePacket.getData(), slimePacket.getDataSize());
     }
-    std::cout << largePacket.getDataSize() << std::endl;
+    //std::cout << largePacket.getDataSize() << std::endl;
 }

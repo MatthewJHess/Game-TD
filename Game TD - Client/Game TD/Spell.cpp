@@ -1,17 +1,21 @@
 #include "Spell.h"
 
 // Private functions
+
 void Spell::initSprite()
 {
-    this->sprite.setTexture(this->texture);
-    this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 2, this->sprite.getGlobalBounds().height / 2);
+    this->sprite.setTexture(*this->texture);
     this->sprite.setRotation(this->sprite.getRotation()); // Initial rotation
+    this->sprite.setScale(this->size / this->texture->getSize().x, this->size / this->texture->getSize().y);
+    this->sprite.setOrigin(this->texture->getSize().x / 2.f, this->texture->getSize().y / 2.f);
 }
 
 // Constructor
-Spell::Spell(std::string type, const sf::Texture& texture, float x, float y, float angle)
-    : texture(texture)
+Spell::Spell(std::string type, TextureManager& textureManager, float x, float y, float angle)
+    : texture(this->texture) // Initialize the texture reference
 {
+    if (type == "arrow" || type == "Arrow") stype = "arrow", this->size = 50.f, this->texture = &textureManager.getTexture("arrow");
+    else if (type == "fire" || type == "Fire") stype = "fire", this->size = 100.f, this->texture = &textureManager.getTexture("fire");
     this->initSprite();
     this->sprite.setPosition(x, y);
     this->sprite.setRotation(angle);

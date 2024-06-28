@@ -11,7 +11,6 @@ class Slime
 private:
     sf::CircleShape shape;
     int type;
-
     float movementSpeed;
     void initShape(float x, float y);
 

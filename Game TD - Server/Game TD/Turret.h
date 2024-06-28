@@ -11,32 +11,21 @@ private:
     sf::Vector2f position;
     float health;
     sf::Sprite sprite;
-    sf::Texture texture;
+    const sf::Texture* texture; // Use a pointer to the texture
     float shootCooldown;
     float shootCooldownMax;
-    std::vector<Spell> spells;
+    std::vector<Spell>& spells;
     std::string type;
 
     void initSprite();
 
 public:
-    Turret(std::string type, float x, float y, TextureManager& textureManager);
+    Turret(std::vector<Spell>& spells, std::string type, float x, float y, TextureManager& textureManager);
 
-    std::string getType() const {
-        return type;
-    }
-
-    float getX() const {
-        return position.x;
-    }
-
-    float getY() const {
-        return position.y;
-    }
-
-    float getDirection() const {
-        return sprite.getRotation();
-    }
+    std::string getType() const;
+    float getX() const;
+    float getY() const;
+    float getDirection() const;
 
     virtual ~Turret();
     std::vector<Spell>& getSpells();

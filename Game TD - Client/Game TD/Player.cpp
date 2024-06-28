@@ -56,7 +56,7 @@ sf::Packet Player::shootSpell(const sf::Vector2f& targetPosition)
     packet << "Spell";
     std::string type = "Fire"; // Set the spell type, adjust this as needed
     packet << type << this->sprite.getPosition().x << this->sprite.getPosition().y << direction.x << direction.y;
-    std::cout << "Direction: ( " << direction.x << ", " << direction.y << std::endl;;
+    std::cout << "Direction: ( " << direction.x << ", " << direction.y << ") Type: "<<type<<" x: "<< this->sprite.getPosition().x<< " y: " << this->sprite.getPosition().y << std::endl;
     return packet;
 }
 
@@ -211,6 +211,7 @@ void Player::updateShooting(const sf::RenderWindow& window)
         packet = shootSpell(worldMousePosition);
         largePacket->append(packet.getData(), packet.getDataSize());
         this->updateSpellCooldown();
+        std::cout << "Sent spell!" << std::endl;
     }
 }
 

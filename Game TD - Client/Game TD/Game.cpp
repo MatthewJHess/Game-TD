@@ -183,9 +183,8 @@ void Game::handleTurretPlacement() {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             // Get the mouse position and adjust it for window coordinates
             sf::Vector2f mousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
-            sf::Texture texture = textureManager.getTexture("archer");
             // Create a new turret at the placement position
-            this->turrets.emplace_back("", texture, mousePos.x, mousePos.y, 0.f);
+            this->turrets.emplace_back("", textureManager, mousePos.x, mousePos.y, 0.f);
             sf::Packet packet;
             packet << "Turret" << "archer" << mousePos.x << mousePos.y << 0.f;
             largePacket.append(packet.getData(), packet.getDataSize());
@@ -269,6 +268,7 @@ void Game::update()
         this->handleTurretPlacement();
         this->updateGui();
         socket.send(largePacket);
+        //std::cout << largePacket.getDataSize() << " is the size of sent" << std::endl;
         largePacket.clear();
     }
 }
@@ -292,7 +292,7 @@ void Game::render()
 
     for (auto& spell : this->spells)
     {
-        spell.render(*this->window);
+       spell.render(*this->window);
     }
 
     for (auto& turret : this->turrets)
@@ -300,9 +300,9 @@ void Game::render()
         turret.render(*this->window);
     }
 
-    for (auto& player : this->players)
+    for (auto& players : this->players)
     {
-        player.render(*this->window);
+        if(players.getType() != player.getType()) players.render(*this->window);
     }
 
     this->player.render(*this->window);
