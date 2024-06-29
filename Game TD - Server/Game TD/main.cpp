@@ -49,10 +49,14 @@ void handleNewConnection() {
 int main() {
     // Start listening for connections
     //std::cout << loop << std::endl;
-    if (listener.listen(SERVER_PORT) != sf::Socket::Done) {
-        std::cerr << "Error starting server!" << std::endl;
+    sf::IpAddress serverIp = sf::IpAddress::getLocalAddress();  // Change this to sf::IpAddress("your_server_ip") if needed
+
+    if (listener.listen(SERVER_PORT, serverIp) != sf::Socket::Done) {
+        std::cerr << "Error starting server on IP " << serverIp.toString() << " and port " << SERVER_PORT << std::endl;
         return -1;
     }
+
+    std::cout << "Server is listening to IP " << serverIp.toString() << " and port " << SERVER_PORT << ", waiting for connections..." << std::endl;
     selector.add(listener);
 
     std::shared_ptr<sf::RenderWindow> window = std::make_shared<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "FreakyTD - Server");
